@@ -11,40 +11,39 @@ export default function SignUpForm() {
   });
 
   const [errors, setErrors] = useState({
-    firstNameError: "",
-    lastNameError: "",
-    emailError: "",
-    passwordError: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
   });
   function checkErrors() {
     let tmpErrors = {};
     formData.firstName.length > 0
       ? ""
-      : (tmpErrors.firstNameError = "First Name cannot be empty ");
+      : (tmpErrors.firstName = "First Name cannot be empty ");
     formData.lastName
       ? ""
-      : (tmpErrors.lastNameError = "Last Name cannot be empty ");
-    /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(formData.email)
+      : (tmpErrors.lastName = "Last Name cannot be empty ");
+    /^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/.test(formData.email)
       ? ""
-      : (tmpErrors.emailError = "Look like this is not an email");
-    formData.password
-      ? ""
-      : (tmpErrors.passwordError = "Password cannot be empty ");
+      : (tmpErrors.email = "Look like this is not an email");
+    formData.password ? "" : (tmpErrors.password = "Password cannot be empty ");
 
-    return tmpErrors;
+    console.log(tmpErrors);
+    setErrors(tmpErrors);
+    return Object.keys(tmpErrors).length > 0;
   }
 
   const submit = (event) => {
     event.preventDefault();
     const check = checkErrors();
-    if (Object.keys(check).length > 0) {
-      setErrors(check);
-    } else {
+    console.log(check);
+    if (!check) {
       setErrors({
-        firstNameError: "",
-        lastNameError: "",
-        emailError: "",
-        passwordError: "",
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
       });
 
       setFormData({
@@ -61,6 +60,11 @@ export default function SignUpForm() {
       ...formData,
       [event.target.name]: event.target.value,
     });
+
+    setErrors({
+      ...errors,
+      [event.target.name]: "",
+    });
   };
 
   return (
@@ -68,55 +72,49 @@ export default function SignUpForm() {
       <Form onSubmit={(event) => submit(event)}>
         <StyledInput
           type="text"
-          placeholder={errors.firstNameError ? "" : "First Name"}
+          placeholder={errors.firstName ? "" : "First Name"}
           name="firstName"
           value={formData.firstName}
           onChange={(event) => {
             inputChange(event);
           }}
-          $error={errors.firstNameError}
+          $error={errors.firstName}
         />
-        {errors.firstNameError && (
-          <StyledError>{errors.firstNameError}</StyledError>
-        )}
+        {errors.firstName && <StyledError>{errors.firstName}</StyledError>}
         <StyledInput
           type="text"
-          placeholder={errors.lastNameError ? "" : "Last Name"}
+          placeholder={errors.lastName ? "" : "Last Name"}
           value={formData.lastName}
           name="lastName"
           onChange={(event) => {
             inputChange(event);
           }}
-          $error={errors.lastNameError}
+          $error={errors.lastName}
         />
-        {errors.lastNameError && (
-          <StyledError>{errors.lastNameError}</StyledError>
-        )}
+        {errors.lastName && <StyledError>{errors.lastName}</StyledError>}
         <StyledInput
           type="text"
-          placeholder={errors.emailError ? "" : "Email Address"}
-          style={{ color: `${errors.emailError ? "#ff7979" : "#3d3b48"}` }}
+          placeholder={errors.email ? "" : "Email Address"}
+          style={{ color: `${errors.email ? "#ff7979" : "#3d3b48"}` }}
           name="email"
           value={formData.email}
           onChange={(event) => {
             inputChange(event);
           }}
-          $error={errors.emailError}
+          $error={errors.email}
         />
-        {errors.emailError && <StyledError>{errors.emailError}</StyledError>}
+        {errors.email && <StyledError>{errors.email}</StyledError>}
         <StyledInput
           type="password"
-          placeholder={errors.passwordError ? "" : "Password"}
+          placeholder={errors.password ? "" : "Password"}
           value={formData.password}
           name="password"
           onChange={(event) => {
             inputChange(event);
           }}
-          $error={errors.passwordError}
+          $error={errors.password}
         />
-        {errors.passwordError && (
-          <StyledError>{errors.passwordError}</StyledError>
-        )}
+        {errors.password && <StyledError>{errors.password}</StyledError>}
         <SubmitButton type="submit">CLAIM YOUR FREE TRIAL</SubmitButton>
       </Form>
       <Terms>
